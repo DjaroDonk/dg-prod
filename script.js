@@ -5,7 +5,8 @@ function update_paper_size(){
 
 function highlight_line(id_num){
     var item = document.getElementById("textline" + id_num);
-    item.classList.add("editing");
+    var outerItem = document.getElementById("line" + id_num);
+    outerItem.classList.add("editing");
     if (item.innerText == "") {
         item.innerText = "-\xa0";
     }
@@ -23,7 +24,8 @@ function highlight_line(id_num){
 
 function unhighlight_line(id_num){
     var item = document.getElementById("textline" + id_num);
-    item.classList.remove("editing");
+    var outerItem = document.getElementById("line" + id_num);
+    outerItem.classList.remove("editing");
     emptyline_detector = /^((-\s*)|(\s+))$/;
     if (emptyline_detector.test(item.innerText)) {
         item.innerText = "";
@@ -37,12 +39,12 @@ function next_line(){
     }
     const detector = /textline[1-9][0-9]*/;
     if (detector.test(act_el.id)) {
-        var id_num = parseInt(act_el.id.slice(4,));
+        var id_num = parseInt(act_el.id.slice(8,));
         if (id_num >= line_size) {
             act_el.blur();
             document.getElementById("textline1").focus();
         } else {
-            console.log(id_num);
+            //console.log(id_num);
             document.getElementById("textline" + (id_num+1)).focus();
         }
         emptyline_detector = /^((-\s*)|(\s+))$/;
@@ -59,7 +61,7 @@ function previous_line(){
     }
     const detector = /textline[1-9][0-9]*/;
     if (detector.test(act_el.id)) {
-        var id_num = parseInt(act_el.id.slice(4,));
+        var id_num = parseInt(act_el.id.slice(8,));
         if (id_num == 1) {
             act_el.blur();
             document.getElementById("textline" + line_size).focus();
@@ -139,13 +141,19 @@ function init(){
     update_paper_size();
     var paper = document.getElementById("paper");
     for (let i = 1; i <= 16; i++) {
+        var paperline = document.createElement("div");
+        paperline.id = "line" + i;
+        paperline.classList.add("paperline");
+
         var writeableLine = document.createElement("p");
         writeableLine.contentEditable = true;
         writeableLine.id = "textline" + (i);
         writeableLine.className = "paperwriting";
         writeableLine.onfocus = function() {highlight_line(i);};
         writeableLine.onblur = function() {unhighlight_line(i);};
-        paper.appendChild(writeableLine);
+
+        paperline.appendChild(writeableLine);
+        paper.appendChild(paperline);
         document.getElementById("textline" + i).addEventListener("input", function() {
             localSave();
         }, false)

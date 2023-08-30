@@ -40,6 +40,15 @@ body {
     font-family: cursive;
     line-height: 25px;
 }
+
+.paperline {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 1px;
+    padding-bottom: 2px;
+    height:27px;
+    background-clip: content-box;
+}
 .paperwriting br {
     display: none;
 }
@@ -48,5 +57,6 @@ body {
 }
 
 .editing {
-    background-color: rgb(255, 255, 241);
+    /*background-color: rgb(255, 255, 241);*/
+    background-color: rgb(255, 255, 216);
 }
