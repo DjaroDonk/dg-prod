@@ -32,6 +32,35 @@ function unhighlight_line(id_num){
     }
 }
 
+function try_push_line(start_num) {
+    last_num = 0;
+    for (let i = start_num; i <= line_size; i++) {
+        if (document.getElementById("textline" + i).innerText == "") {
+            last_num = i;
+            break;
+        }
+    }
+    if (last_num != 0) {
+        for (i = line_size; i >= start_num + 1; i -= 1) {
+            (document.getElementById("textline" + i).innerText = document.getElementById("textline" + (i-1)).innerText);
+        }
+        document.getElementById("textline" + i).innerText = "";
+    }
+    localSave();
+}
+
+function try_pull_line(start_num) {
+    console.log("Trying pull!");
+    if (["", "-"].includes(document.getElementById("textline" + start_num).innerText)) {
+        for (let i = start_num; i <= line_size - 1; i++) {
+            console.log("Pulling!");
+            document.getElementById("textline" + i).innerText = document.getElementById("textline" + (i+1)).innerText;
+        }
+        document.getElementById("textline" + line_size).innerText = "";
+    }
+    localSave();
+}
+
 function toggle_done_line(id_num) {
     var item = document.getElementById("textline" + id_num);
     if (item.classList.contains("donetask")) {
@@ -98,7 +127,18 @@ document.addEventListener('keyup', function (event) {
 document.addEventListener('keydown', function (event) {
     if (event.key === 'Enter') {
         event.preventDefault();
-        next_line();
+
+        const detector = /textline[1-9][0-9]*/;
+        var act_el = document.activeElement;
+        if (detector.test(act_el.id)) {
+            var id_num = parseInt(act_el.id.slice(8,));
+        }
+        if (document.getElementById("textline" + (id_num+1).innerText == "")) {
+            next_line();
+        } else {
+            try_push_line(id_num+1);
+            next_line();
+        }
     }
     else if (event.key === 'ArrowDown') {
         event.preventDefault();
@@ -121,6 +161,18 @@ document.addEventListener('keydown', function (event) {
     }
     else if (event.key === "Control") {
         ctrl = true;
+    } else if (event.key === "Backspace") {
+        const detector = /textline[1-9][0-9]*/;
+        var act_el = document.activeElement;
+        if (detector.test(act_el.id)) {
+            var id_num = parseInt(act_el.id.slice(8,));
+            if (act_el.innerText == "" || act_el.innerText == "-") {
+                console.log(id_num);
+                try_pull_line(id_num);
+                previous_line();
+                event.preventDefault();
+            }
+        }
     }
 });
 
