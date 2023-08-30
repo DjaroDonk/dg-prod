@@ -4,7 +4,7 @@ function update_paper_size(){
 }
 
 function highlight_line(id_num){
-    var item = document.getElementById("line" + id_num);
+    var item = document.getElementById("textline" + id_num);
     item.classList.add("editing");
     if (item.innerText == "") {
         item.innerText = "-\xa0";
@@ -22,7 +22,7 @@ function highlight_line(id_num){
 }
 
 function unhighlight_line(id_num){
-    var item = document.getElementById("line" + id_num);
+    var item = document.getElementById("textline" + id_num);
     item.classList.remove("editing");
     emptyline_detector = /^((-\s*)|(\s+))$/;
     if (emptyline_detector.test(item.innerText)) {
@@ -33,17 +33,17 @@ function unhighlight_line(id_num){
 function next_line(){
     var act_el = document.activeElement;
     if (act_el == document.body) {
-        document.getElementById("line1").focus();
+        document.getElementById("textline1").focus();
     }
-    const detector = /line[1-9][0-9]*/;
+    const detector = /textline[1-9][0-9]*/;
     if (detector.test(act_el.id)) {
         var id_num = parseInt(act_el.id.slice(4,));
         if (id_num >= line_size) {
             act_el.blur();
-            document.getElementById("line1").focus();
+            document.getElementById("textline1").focus();
         } else {
             console.log(id_num);
-            document.getElementById("line" + (id_num+1)).focus();
+            document.getElementById("textline" + (id_num+1)).focus();
         }
         emptyline_detector = /^((-\s*)|(\s+))$/;
         if (emptyline_detector.test(act_el.innerText)) {
@@ -55,16 +55,16 @@ function next_line(){
 function previous_line(){
     var act_el = document.activeElement;
     if (act_el == document.body) {
-        document.getElementById("line1").focus();
+        document.getElementById("textline1").focus();
     }
-    const detector = /line[1-9][0-9]*/;
+    const detector = /textline[1-9][0-9]*/;
     if (detector.test(act_el.id)) {
         var id_num = parseInt(act_el.id.slice(4,));
         if (id_num == 1) {
             act_el.blur();
-            document.getElementById("line" + line_size).focus();
+            document.getElementById("textline" + line_size).focus();
         } else {
-            document.getElementById("line" + (id_num-1)).focus();
+            document.getElementById("textline" + (id_num-1)).focus();
         }
         emptyline_detector = /(-\s*)|(\s+)/;
         emptyline_detector = /^((-\s*)|(\s+))$/;
@@ -121,16 +121,16 @@ window.addEventListener('focus', function(){
 
 function localSave(){
     for (let i = 1; i <= 16; i++) {
-        localStorage.setItem("line" + i, document.getElementById("line"+i).innerText);
+        localStorage.setItem("textline" + i, document.getElementById("textline"+i).innerText);
     }
 }
 
 function localLoad(){
     for (let i = 1; i <= 16; i++) {
-        document.getElementById("line"+i).innerText = localStorage.getItem("line" + i);
+        document.getElementById("textline"+i).innerText = localStorage.getItem("textline" + i);
         emptyline_detector = /^((-\s*)|(\s+))$/;
-        if (emptyline_detector.test(document.getElementById("line"+i).innerText)) {
-            document.getElementById("line"+i).innerText = "";
+        if (emptyline_detector.test(document.getElementById("textline"+i).innerText)) {
+            document.getElementById("textline"+i).innerText = "";
         }
     }
 }
@@ -141,12 +141,12 @@ function init(){
     for (let i = 1; i <= 16; i++) {
         var writeableLine = document.createElement("p");
         writeableLine.contentEditable = true;
-        writeableLine.id = "line" + (i);
+        writeableLine.id = "textline" + (i);
         writeableLine.className = "paperwriting";
         writeableLine.onfocus = function() {highlight_line(i);};
         writeableLine.onblur = function() {unhighlight_line(i);};
         paper.appendChild(writeableLine);
-        document.getElementById("line" + i).addEventListener("input", function() {
+        document.getElementById("textline" + i).addEventListener("input", function() {
             localSave();
         }, false)
     }
