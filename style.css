@@ -39,6 +39,7 @@ body {
     background-clip: content-box;
     font-family: cursive;
     line-height: 25px;
+    color: black;
 }
 
 .paperline {
@@ -49,6 +50,12 @@ body {
     height:27px;
     background-clip: content-box;
 }
+
+.donetask {
+    color: grey;
+    text-decoration: line-through;
+}
+
 .paperwriting br {
     display: none;
 }

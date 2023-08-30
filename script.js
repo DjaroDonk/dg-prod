@@ -32,6 +32,14 @@ function unhighlight_line(id_num){
     }
 }
 
+function toggle_done_line(id_num) {
+    var item = document.getElementById("textline" + id_num);
+    if (item.classList.contains("donetask")) {
+        item.classList.remove("donetask");
+    } else {
+        item.classList.add("donetask");
+    }
+}
 function next_line(){
     var act_el = document.activeElement;
     if (act_el == document.body) {
@@ -151,6 +159,14 @@ function init(){
         writeableLine.className = "paperwriting";
         writeableLine.onfocus = function() {highlight_line(i);};
         writeableLine.onblur = function() {unhighlight_line(i);};
+        writeableLine.onmousedown = function(e) {
+            if (e.button == 2) {
+                toggle_done_line(i);
+            }
+        };
+        writeableLine.oncontextmenu = function () {
+            return false;
+        }
 
         paperline.appendChild(writeableLine);
         paper.appendChild(paperline);
