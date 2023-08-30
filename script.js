@@ -24,6 +24,10 @@ function highlight_line(id_num){
 function unhighlight_line(id_num){
     var item = document.getElementById("line" + id_num);
     item.classList.remove("editing");
+    emptyline_detector = /^((-\s*)|(\s+))$/;
+    if (emptyline_detector.test(item.innerText)) {
+        item.innerText = "";
+    }
 }
 
 function next_line(){
@@ -70,22 +74,12 @@ function previous_line(){
     }
 }
 
-function init(){
-    update_paper_size();
-    var paper = document.getElementById("paper");
-    for (let i = 1; i <= 16; i++) {
-        var writeableLine = document.createElement("p");
-        writeableLine.contentEditable = true;
-        writeableLine.id = "line" + (i);
-        writeableLine.className = "paperwriting";
-        writeableLine.onfocus = function() {highlight_line(i);};
-        writeableLine.onblur = function() {unhighlight_line(i);};
-        paper.appendChild(writeableLine);
-    }
-}
-
 var shift = false;
+var ctrl = false;
 document.addEventListener('keyup', function (event) {
+    if (event.key === "Control") {
+        ctrl = false;
+    }
     if (event.key === 'Shift') {
         shift = false;
     }
@@ -104,7 +98,9 @@ document.addEventListener('keydown', function (event) {
         event.preventDefault();
         previous_line();
     } else if (event.key === 'Shift') {
-        shift = true;
+        if (!ctrl) {
+            shift = true;
+        }
     } else if (event.key === "Tab") {
         event.preventDefault();
         if (shift) {
@@ -113,4 +109,51 @@ document.addEventListener('keydown', function (event) {
             next_line();
         }
     }
+    else if (event.key === "Control") {
+        ctrl = true;
+    }
 });
+
+window.addEventListener('focus', function(){
+    ctrl = false;
+    shift = false;
+});
+
+function localSave(){
+    for (let i = 1; i <= 16; i++) {
+        localStorage.setItem("line" + i, document.getElementById("line"+i).innerText);
+    }
+}
+
+function localLoad(){
+    for (let i = 1; i <= 16; i++) {
+        document.getElementById("line"+i).innerText = localStorage.getItem("line" + i);
+        emptyline_detector = /^((-\s*)|(\s+))$/;
+        if (emptyline_detector.test(document.getElementById("line"+i).innerText)) {
+            document.getElementById("line"+i).innerText = "";
+        }
+    }
+}
+
+function init(){
+    update_paper_size();
+    var paper = document.getElementById("paper");
+    for (let i = 1; i <= 16; i++) {
+        var writeableLine = document.createElement("p");
+        writeableLine.contentEditable = true;
+        writeableLine.id = "line" + (i);
+        writeableLine.className = "paperwriting";
+        writeableLine.onfocus = function() {highlight_line(i);};
+        writeableLine.onblur = function() {unhighlight_line(i);};
+        paper.appendChild(writeableLine);
+        document.getElementById("line" + i).addEventListener("input", function() {
+            localSave();
+        }, false)
+    }
+    localLoad();
+}
+
+function resetAll(){
+    localStorage.clear();
+    localLoad();
+}
