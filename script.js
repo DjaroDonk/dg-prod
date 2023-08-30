@@ -34,11 +34,17 @@ function next_line(){
     const detector = /line[1-9][0-9]*/;
     if (detector.test(act_el.id)) {
         var id_num = parseInt(act_el.id.slice(4,));
-        if (id_num > line_size) {
-            document.body.focus();
+        if (id_num >= line_size) {
+            act_el.blur();
+            document.getElementById("line1").focus();
+        } else {
+            console.log(id_num);
+            document.getElementById("line" + (id_num+1)).focus();
         }
-        console.log("line" + (id_num+1));
-        document.getElementById("line" + (id_num+1)).focus();
+        emptyline_detector = /^((-\s*)|(\s+))$/;
+        if (emptyline_detector.test(act_el.innerText)) {
+            act_el.innerText = "";
+        }
     }
 }
 
@@ -51,11 +57,14 @@ function previous_line(){
     if (detector.test(act_el.id)) {
         var id_num = parseInt(act_el.id.slice(4,));
         if (id_num == 1) {
-            document.body.focus();
+            act_el.blur();
+            document.getElementById("line" + line_size).focus();
+        } else {
+            document.getElementById("line" + (id_num-1)).focus();
         }
-        console.log("line" + (id_num+1));
-        document.getElementById("line" + (id_num-1)).focus();
-        if (act_el.innerText == "-\xa0") {
+        emptyline_detector = /(-\s*)|(\s+)/;
+        emptyline_detector = /^((-\s*)|(\s+))$/;
+        if (emptyline_detector.test(act_el.innerText)) {
             act_el.innerText = "";
         }
     }
@@ -64,13 +73,13 @@ function previous_line(){
 function init(){
     update_paper_size();
     var paper = document.getElementById("paper");
-    for (let i = 0; i < 16; i++) {
+    for (let i = 1; i <= 16; i++) {
         var writeableLine = document.createElement("p");
         writeableLine.contentEditable = true;
-        writeableLine.id = "line" + (i+1);
+        writeableLine.id = "line" + (i);
         writeableLine.className = "paperwriting";
-        writeableLine.onfocus = function() {highlight_line(i+1);};
-        writeableLine.onblur = function() {unhighlight_line(i+1);};
+        writeableLine.onfocus = function() {highlight_line(i);};
+        writeableLine.onblur = function() {unhighlight_line(i);};
         paper.appendChild(writeableLine);
     }
 }
