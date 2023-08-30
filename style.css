@@ -1,0 +1,52 @@
+body {
+    margin-right: 10%;
+    margin-left: 10%;
+    background-color: #1b1b1b; 
+}
+
+.title {
+    margin-bottom: 5px;
+    margin-top: 5px;
+    font-size: 80px;
+    color:rgb(255, 255, 255);
+}
+.subtitle {
+    color: rgb(182, 182, 182);
+    font-size: 40px;
+}
+
+#paper {
+    min-width: 500px;
+    max-width: 500px;
+    display: inline-block;
+    background: repeating-linear-gradient(
+        white, white 28px, black 29px, black 30px
+    );
+    overflow: clip;
+}
+
+.paperwriting {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    padding-top: 1px;
+    padding-bottom:2px;
+    font-size: 25px;
+    height: 27px;
+    max-height: 30px;
+    width: 100% - 20px;
+    margin-left: 20px;
+    white-space: nowrap;
+    background-clip: content-box;
+    font-family: cursive;
+    line-height: 25px;
+}
+.paperwriting br {
+    display: none;
+}
+[contenteditable] {
+    outline: 0px solid transparent;
+}
+
+.editing {
+    background-color: rgb(255, 255, 241);
+}
