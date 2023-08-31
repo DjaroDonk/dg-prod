@@ -33,6 +33,9 @@ function unhighlight_line(id_num){
 }
 
 function try_push_line(start_num) {
+    if (document.getElementById("textline" + line_size).innerText != "") {
+        return;
+    }
     last_num = 0;
     for (let i = start_num; i <= line_size; i++) {
         if (document.getElementById("textline" + i).innerText == "") {
