@@ -54,7 +54,7 @@ function try_push_line(start_num) {
 
 function try_pull_line(start_num) {
     console.log("Trying pull!");
-    if (["", "-"].includes(document.getElementById("textline" + start_num).innerText)) {
+    if (["", "-", "-\xa0"].includes(document.getElementById("textline" + start_num).innerText)) {
         for (let i = start_num; i <= line_size - 1; i++) {
             console.log("Pulling!");
             document.getElementById("textline" + i).innerText = document.getElementById("textline" + (i+1)).innerText;
@@ -169,7 +169,7 @@ document.addEventListener('keydown', function (event) {
         var act_el = document.activeElement;
         if (detector.test(act_el.id)) {
             var id_num = parseInt(act_el.id.slice(8,));
-            if (act_el.innerText == "" || act_el.innerText == "-") {
+            if (act_el.innerText == "" || act_el.innerText == "-" || act_el.innerText == "-\xa0") {
                 console.log(id_num);
                 try_pull_line(id_num);
                 previous_line();
